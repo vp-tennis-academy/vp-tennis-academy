@@ -1,0 +1,18 @@
+{
+    "host": "vp-tennis-academy.vercel.app",
+    "name": "VP Tennis Academy",
+    "launcherName": "VP Tennis",
+    "themeColor": "#0b1322",
+    "navigationColor": "#0b1322",
+    "navigationColorDark": "#0b1322",
+    "navigationDividerColor": "#0b1322",
+    "navigationDividerColorDark": "#0b1322",
+    "backgroundColor": "#0b1322",
+    "enableNotifications": false,
+    "startUrl": "/",
+    "iconUrl": "https://vp-tennis-academy.vercel.app/logo.png",
+    "maskableIconUrl": "https://vp-tennis-academy.vercel.app/logo.png",
+    "packageId": "com.vptennis.academy",
+    "flavor": "client",
+    "appVersionName": "1"
+}
