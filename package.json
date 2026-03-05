@@ -12,6 +12,7 @@
   "dependencies": {
     "@capacitor/android": "^8.1.0",
     "@capacitor/core": "^8.1.0",
+    "@dataconnect/generated": "file:src/dataconnect-generated",
     "firebase": "^12.10.0",
     "jspdf": "^4.2.0",
     "jspdf-autotable": "^5.0.7",

@@ -16,7 +16,6 @@ import OffersNews from './components/OffersNews';
 import StatsManager from './components/StatsManager';
 import ContactManager from './components/ContactManager';
 import { initialStudents, initialExpenses, feeHistory as initialFeeHistory } from './data/mockData';
-import { supabase } from './supabaseClient';
 
 function App() {
   const [session, setSession] = useState(null);
@@ -45,59 +44,20 @@ function App() {
   useEffect(() => { localStorage.setItem('vp_feeHistory', JSON.stringify(feeHistory)); }, [feeHistory]);
 
   useEffect(() => {
-    // Check for local mock user first
+    // Check for local mock user
     const savedMock = localStorage.getItem('vp_mock_user');
     if (savedMock) {
       setMockUser(JSON.parse(savedMock));
-      setLoading(false);
-      return;
     }
-
-    // Initial session check
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session) fetchProfile(session.user.id);
-      else setLoading(false);
-    });
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      if (session) {
-        fetchProfile(session.user.id);
-      } else {
-        setProfile(null);
-        setLoading(false);
-      }
-    });
-
-    return () => subscription.unsubscribe();
+    setLoading(false);
   }, []);
-
-  const fetchProfile = async (userId) => {
-    try {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', userId)
-        .single();
-
-      if (error) throw error;
-      setProfile(data);
-    } catch (err) {
-      console.error('Error fetching profile:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleLogout = async () => {
     if (mockUser) {
       localStorage.removeItem('vp_mock_user');
       setMockUser(null);
-    } else {
-      await supabase.auth.signOut();
     }
+
     setActiveView('dashboard');
     setMobileOpen(false);
   };
@@ -110,20 +70,15 @@ function App() {
     );
   }
 
-  if (!mockUser && (!session || !profile)) {
+  if (!mockUser) {
     return <LandingPage />;
   }
 
-  const user = mockUser ? {
+  const user = {
     name: mockUser.name,
     role: mockUser.role,
     email: `${mockUser.name.toLowerCase()}@vptennis.com`,
     avatar: null
-  } : {
-    name: profile.full_name || session.user.email.split('@')[0],
-    role: profile.role, // 'admin' or 'user'
-    email: session.user.email,
-    avatar: profile.avatar_url
   };
 
   const isAdmin = user.role === 'admin';

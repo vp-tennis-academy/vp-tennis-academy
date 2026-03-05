@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import { supabase } from '../supabaseClient';
-
 export default function Login({ onBack }) {
     const [role, setRole] = useState('user'); // Default to user login
     const [form, setForm] = useState({ username: '', password: '', recoveryEmail: '', recoveryPhone: '', otp: '', newPassword: '' });
@@ -50,17 +48,11 @@ export default function Login({ onBack }) {
             }
         } catch { /* ignore */ }
 
-        try {
-            const { error: signInError } = await supabase.auth.signInWithPassword({
-                email: form.username,
-                password: form.password,
-            });
-            if (signInError) throw signInError;
-        } catch (err) {
+        // Fallback for invalid credentials
+        setTimeout(() => {
             setError('Invalid username or password.');
-        } finally {
             setLoading(false);
-        }
+        }, 800);
     };
 
 
