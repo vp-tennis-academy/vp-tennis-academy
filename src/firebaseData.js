@@ -26,8 +26,11 @@ export async function saveAds(adsArray) {
         querySnapshot.forEach((d) => { deletePromises.push(deleteDoc(doc(db, "advertisements", d.id))); });
         await Promise.all(deletePromises);
 
-        // Insert new
-        const insertPromises = batchAds.map(ad => setDoc(doc(collection(db, "advertisements")), ad));
+        // Insert new (preserving local IDs)
+        const insertPromises = batchAds.map(ad => {
+            const docRef = ad.id ? doc(db, "advertisements", String(ad.id)) : doc(collection(db, "advertisements"));
+            return setDoc(docRef, { ...ad, id: docRef.id });
+        });
         await Promise.all(insertPromises);
     } catch (error) {
         console.error('Error saving ads to Firebase:', error);
@@ -59,7 +62,10 @@ export async function saveStats(statsArray) {
         querySnapshot.forEach((d) => { deletePromises.push(deleteDoc(doc(db, "stats", d.id))); });
         await Promise.all(deletePromises);
 
-        const insertPromises = batchStats.map(stat => setDoc(doc(collection(db, "stats")), stat));
+        const insertPromises = batchStats.map(stat => {
+            const docRef = stat.id ? doc(db, "stats", String(stat.id)) : doc(collection(db, "stats"));
+            return setDoc(docRef, { ...stat, id: docRef.id });
+        });
         await Promise.all(insertPromises);
     } catch (error) {
         console.error('Error saving stats to Firebase:', error);
@@ -91,7 +97,10 @@ export async function saveContactInfo(contactsArray) {
         querySnapshot.forEach((d) => { deletePromises.push(deleteDoc(doc(db, "contact_info", d.id))); });
         await Promise.all(deletePromises);
 
-        const insertPromises = batchContacts.map(contact => setDoc(doc(collection(db, "contact_info")), contact));
+        const insertPromises = batchContacts.map(contact => {
+            const docRef = contact.id ? doc(db, "contact_info", String(contact.id)) : doc(collection(db, "contact_info"));
+            return setDoc(docRef, { ...contact, id: docRef.id });
+        });
         await Promise.all(insertPromises);
     } catch (error) {
         console.error('Error saving contact info to Firebase:', error);
@@ -123,7 +132,10 @@ export async function saveOffers(offersArray) {
         querySnapshot.forEach((d) => { deletePromises.push(deleteDoc(doc(db, "offers_news", d.id))); });
         await Promise.all(deletePromises);
 
-        const insertPromises = batchOffers.map(offer => setDoc(doc(collection(db, "offers_news")), offer));
+        const insertPromises = batchOffers.map(offer => {
+            const docRef = offer.id ? doc(db, "offers_news", String(offer.id)) : doc(collection(db, "offers_news"));
+            return setDoc(docRef, { ...offer, id: docRef.id });
+        });
         await Promise.all(insertPromises);
     } catch (error) {
         console.error('Error saving offers to Firebase:', error);
@@ -155,7 +167,10 @@ export async function saveTournaments(tournamentsArray) {
         querySnapshot.forEach((d) => { deletePromises.push(deleteDoc(doc(db, "tournaments", d.id))); });
         await Promise.all(deletePromises);
 
-        const insertPromises = batchTournaments.map(tournament => setDoc(doc(collection(db, "tournaments")), tournament));
+        const insertPromises = batchTournaments.map(tournament => {
+            const docRef = tournament.id ? doc(db, "tournaments", String(tournament.id)) : doc(collection(db, "tournaments"));
+            return setDoc(docRef, { ...tournament, id: docRef.id });
+        });
         await Promise.all(insertPromises);
     } catch (error) {
         console.error('Error saving tournaments to Firebase:', error);
